@@ -1,0 +1,306 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ── Design Tokens ─────────────────────────────────────────────────────── */
+:root {
+  --neon-green: #00FF41;
+  --neon-green-dim: #00cc34;
+  --neon-green-glow: rgba(0, 255, 65, 0.35);
+
+  --fire-orange: #FF6200;
+  --fire-orange-glow: rgba(255, 98, 0, 0.35);
+
+  --terminal-cyan: #00FFFF;
+  --terminal-cyan-glow: rgba(0, 255, 255, 0.3);
+
+  --amber: #FF9500;
+  --red-alert: #FF3333;
+
+  --void-black: #0A0A0A;
+  --surface-1: #111111;
+  --surface-2: #1a1a1a;
+  --surface-glass: rgba(0, 0, 0, 0.55);
+
+  --text-primary: #e8e8e8;
+  --text-secondary: #999999;
+  --text-dim: #555555;
+
+  --font-terminal: 'VT323', monospace;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ── Reset & Base ──────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--void-black);
+  color: var(--text-primary);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--neon-green-dim);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--neon-green); }
+
+/* ── Layout ────────────────────────────────────────────────────────────── */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Status Bar (minimal breadcrumb + clock) ─────────────────────────── */
+.status-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: var(--surface-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  box-sizing: border-box;
+}
+
+.status-bar-left,
+.status-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-bar-brand {
+  color: var(--neon-green);
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 1.5px;
+}
+
+.status-bar-sep { opacity: 0.3; }
+
+.status-bar-route {
+  font-weight: 600;
+}
+
+.status-bar-clock { opacity: 0.7; }
+
+/* ── Home (unified layout) ────────────────────────────────────────────── */
+.home-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 32px 40px;
+  gap: 40px;
+  overflow-y: auto;
+}
+
+/* ── TopBanner (3 images, no chassis) ────────────────────────────────── */
+.top-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 8px 0;
+}
+
+.top-banner-badge {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 65, 0.3));
+  transition: filter 0.3s ease;
+}
+
+.top-banner-badge:hover {
+  filter: drop-shadow(0 0 20px rgba(0, 255, 65, 0.7));
+}
+
+.top-banner-title {
+  height: 130px;
+  width: auto;
+  filter: drop-shadow(0 0 28px rgba(0, 255, 65, 0.4));
+}
+
+/* ── Relic Section (header + grid) ────────────────────────────────────── */
+.relic-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.relic-section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.relic-section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.relic-section-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--text-dim), transparent);
+  opacity: 0.3;
+}
+
+.relic-grid {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 24px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* ── ShieldCard (unified container) ───────────────────────────────────── */
+.shield-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(8, 8, 8, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  will-change: transform;
+}
+
+.shield-card:hover {
+  border-color: var(--accent, rgba(0, 255, 157, 0.5));
+  box-shadow: 0 0 40px -8px var(--accent, rgba(0, 255, 157, 0.4));
+  background: rgba(12, 12, 16, 0.92);
+}
+
+.shield-card-image-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 4px 0 16px;
+  overflow: hidden;
+}
+
+.shield-card-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 0 14px rgba(0, 0, 0, 0.6));
+  transition: filter 0.3s ease;
+  pointer-events: none;
+  user-select: none;
+}
+
+.shield-card:hover .shield-card-image {
+  filter: drop-shadow(0 0 22px var(--accent, rgba(0, 255, 157, 0.5)));
+}
+
+.shield-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: var(--font-mono);
+}
+
+.shield-card-name {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.shield-card-status {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+}
+
+.shield-card-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent, var(--neon-green));
+  box-shadow: 0 0 6px var(--accent, var(--neon-green));
+  flex-shrink: 0;
+}
+
+/* ── Home footer ───────────────────────────────────────────────────────── */
+.home-footer {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-top: auto;
+  padding-top: 24px;
+  text-align: center;
+}

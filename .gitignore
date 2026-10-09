@@ -1,0 +1,74 @@
+# ── Node / build artifacts (root) ────────────────────────────────────────
+node_modules/
+dist/
+build/
+coverage/
+.logs/
+*.log
+
+# ── Environment files (track only the templates) ────────────────────────
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ── Sub-project .git dirs (they keep their own history; the parent
+#     does NOT track them as part of the unified monorepo)
+central/AXE-Guard_Muilti_Agents-Shell/.git/
+central/SOC-sys_Dashboard/.git/
+central/PetroShield_Finance-CyberSec/.git/
+
+# ── Sub-project artifacts (each app builds its own dist inside the parent
+#     during the orchestrated build; the parent then hoists the results
+#     into ./dist/ for Netlify to publish)
+central/AXE-Guard_Muilti_Agents-Shell/node_modules/
+central/AXE-Guard_Muilti_Agents-Shell/dist/
+central/AXE-Guard_Muilti_Agents-Shell/dev.db*
+central/AXE-Guard_Muilti_Agents-Shell/.env*
+central/AXE-Guard_Muilti_Agents-Shell/.github/
+central/AXE-Guard_Muilti_Agents-Shell/netlify.toml
+central/SOC-sys_Dashboard/node_modules/
+central/SOC-sys_Dashboard/dist/
+central/SOC-sys_Dashboard/.env*
+central/SOC-sys_Dashboard/.github/
+central/SOC-sys_Dashboard/netlify.toml
+central/PetroShield_Finance-CyberSec/node_modules/
+central/PetroShield_Finance-CyberSec/dist/
+central/PetroShield_Finance-CyberSec/dev.db*
+central/PetroShield_Finance-CyberSec/.env*
+central/PetroShield_Finance-CyberSec/.github/
+central/PetroShield_Finance-CyberSec/netlify.toml
+central/central/node_modules/
+central/central/dist/
+central/central/.env*
+
+# ── GP SENAI dossier (its own git repo; not part of the unified monorepo) ─
+PetroShield-GranPrix_Nacional_2026/
+
+# ── Misc / OS / editor ───────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# ── Backup archive (binary) ──────────────────────────────────────────────
+central.7z
+
+# ── Netlify (CLI's site linking metadata; never tracked) ────────────────
+.netlify/
+
+# ── Submodule conversion workspace (only used at conversion time;
+#     safe to delete once submodules are in place)
+_external/
+
+# ── Local dev artifacts (Playwright session snapshots, screenshots) ─────
+.playwright-mcp/
+*.png
+!central/central/public/elements/*.png
+!PetroShield-GranPrix_Nacional_2026/**/*.png
+!PetroShield-GranPrix_Nacional_2026/**/*.jpg
+!PetroShield-GranPrix_Nacional_2026/**/*.jpeg

@@ -1,0 +1,2 @@
+# Netlify SPA fallback — serve index.html for all routes so React Router handles /go/:appId
+/*    /index.html   200
