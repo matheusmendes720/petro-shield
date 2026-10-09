@@ -145,13 +145,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 32px;
+  gap: clamp(8px, 3vw, 32px);
   padding: 8px 0;
+  flex-wrap: wrap;
 }
 
 .top-banner-badge {
-  width: 64px;
-  height: 64px;
+  width: clamp(48px, 10vw, 88px);
+  height: clamp(48px, 10vw, 88px);
   object-fit: contain;
   filter: drop-shadow(0 0 10px rgba(0, 255, 65, 0.3));
   transition: filter 0.3s ease;
@@ -162,7 +163,7 @@ body {
 }
 
 .top-banner-title {
-  height: 130px;
+  height: clamp(72px, 20vw, 200px);
   width: auto;
   filter: drop-shadow(0 0 28px rgba(0, 255, 65, 0.4));
 }
@@ -202,11 +203,10 @@ body {
 }
 
 .relic-grid {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  justify-items: center;
   gap: 24px;
-  flex-wrap: wrap;
   width: 100%;
 }
 
@@ -227,9 +227,17 @@ body {
 }
 
 .shield-card:hover {
-  border-color: var(--accent, rgba(0, 255, 157, 0.5));
-  box-shadow: 0 0 40px -8px var(--accent, rgba(0, 255, 157, 0.4));
-  background: rgba(12, 12, 16, 0.92);
+  /* Drop the chassis outline + fill on hover — the wider accent halo
+     alone defines the card's silhouette. The shield PNG carries its own
+     dark interior; only the glow rim is visible outside it. */
+  border-color: transparent;
+  background: transparent;
+  /* Pure outer diffuse glow on hover. No drop shadow (would cast a
+     rectangle), no inset glow (would tint the chassis interior — that's
+     what was reading as a "square outline"). Only flood + tight halo. */
+  box-shadow:
+    0 0 360px 50px var(--accent, rgba(0, 255, 157, 0.4)),
+    0 0 180px 0 var(--accent, rgba(0, 255, 157, 0.6));
 }
 
 .shield-card-image-wrap {
@@ -240,6 +248,19 @@ body {
   min-height: 0;
   padding: 4px 0 16px;
   overflow: hidden;
+  /* The shield PNGs have rectangular canvases with the shield shape
+     inside; mask the corners so only the shield silhouette stays visible
+     and the rectangular PNG edge never reaches the chassis boundary. */
+  -webkit-mask-image: radial-gradient(
+    ellipse 92% 96% at 50% 50%,
+    black 70%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 92% 96% at 50% 50%,
+    black 70%,
+    transparent 100%
+  );
 }
 
 .shield-card-image {

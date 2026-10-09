@@ -107,21 +107,6 @@ export const APPS: AppConfig[] = [
     statusEndpoint: '/api/health',
   },
   {
-    id: 'petroshield-finance',
-    name: 'PetroShield Finance-CyberSec',
-    shortName: 'PetroShield FC',
-    description:
-      'Glassmorphism cyber-ops Nebula SOC. Recharts + D3 threat maps, vendor risk spotlight, and C-Level econometrics.',
-    path: '/petroshield-finance/',
-    localPort: 3002,
-    accentColor: '#FF6200',
-    glowColor: rgba('#FF6200', 0.6),
-    effectType: 'fire',
-    imagePath: '/elements/fin-anchor.png',
-    icon: '🌐',
-    statusEndpoint: '/api/health',
-  },
-  {
     id: 'soc-sys',
     name: 'SOC-sys Dashboard',
     shortName: 'SOC-sys',
@@ -134,6 +119,21 @@ export const APPS: AppConfig[] = [
     effectType: 'electric',
     imagePath: '/elements/soc_admin.png',
     icon: '⚡',
+    statusEndpoint: '/api/health',
+  },
+  {
+    id: 'petroshield-finance',
+    name: 'PetroShield Finance-CyberSec',
+    shortName: 'PetroShield FC',
+    description:
+      'Glassmorphism cyber-ops Nebula SOC. Recharts + D3 threat maps, vendor risk spotlight, and C-Level econometrics.',
+    path: '/petroshield-finance/',
+    localPort: 3002,
+    accentColor: '#FF6200',
+    glowColor: rgba('#FF6200', 0.6),
+    effectType: 'fire',
+    imagePath: '/elements/fin-anchor.png',
+    icon: '🌐',
     statusEndpoint: '/api/health',
   },
 ]

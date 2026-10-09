@@ -25,16 +25,39 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const repoRoot = resolve(__dirname, '..')
 
-/** Each entry: { dir, prefix, name }. prefix '' means root of dist/. */
+/** Each entry: { dir, prefix, name, buildCmd, buildArgs }. prefix '' means root of dist/. */
 const SUBPROJECTS = [
-  { name: 'hub (PetroShield unified SPA)', dir: 'central/central', prefix: '' },
-  { name: 'AXE-Guard Shell', dir: 'central/AXE-Guard_Muilti_Agents-Shell', prefix: 'axe-guard' },
+  {
+    name: 'hub (PetroShield unified SPA)',
+    dir: 'central/central',
+    prefix: '',
+    // Hub runs tsc -b first (project references) then vite build.
+    buildCmd: 'node',
+    buildArgs: ['node_modules/typescript/bin/tsc', '-b'],
+    afterCmd: 'node',
+    afterArgs: ['node_modules/vite/bin/vite.js', 'build'],
+  },
+  {
+    name: 'AXE-Guard Shell',
+    dir: 'central/AXE-Guard_Muilti_Agents-Shell',
+    prefix: 'axe-guard',
+    buildCmd: 'node',
+    buildArgs: ['node_modules/vite/bin/vite.js', 'build'],
+  },
   {
     name: 'PetroShield Finance-CyberSec',
     dir: 'central/PetroShield_Finance-CyberSec',
     prefix: 'petroshield-finance',
+    buildCmd: 'node',
+    buildArgs: ['node_modules/vite/bin/vite.js', 'build'],
   },
-  { name: 'SOC-sys Dashboard', dir: 'central/SOC-sys_Dashboard', prefix: 'soc-sys' },
+  {
+    name: 'SOC-sys Dashboard',
+    dir: 'central/SOC-sys_Dashboard',
+    prefix: 'soc-sys',
+    buildCmd: 'node',
+    buildArgs: ['node_modules/vite/bin/vite.js', 'build'],
+  },
 ]
 
 const log = (msg) => process.stdout.write(`${msg}\n`)
@@ -76,14 +99,21 @@ for (const sub of SUBPROJECTS) {
     fail(`no node_modules in ${sub.dir} — run 'npm install' (or 'bun install') first`)
   }
 
+  // Direct node invocation (bypasses npm-script shim, which is flaky on
+  // Windows when invoked via spawnSync with shell:true).
   const t0 = Date.now()
-  const result = spawnSync('npm', ['run', 'build'], {
+  const r1 = spawnSync(sub.buildCmd, sub.buildArgs, {
     cwd: subPath,
     stdio: 'inherit',
-    shell: process.platform === 'win32', // npm.cmd on Windows
   })
-  if (result.status !== 0) {
-    fail(`build failed in ${sub.dir} (exit ${result.status})`)
+  if (r1.status !== 0) {
+    fail(`build failed in ${sub.dir} (exit ${r1.status})`)
+  }
+  if (sub.afterCmd) {
+    const r2 = spawnSync(sub.afterCmd, sub.afterArgs, { cwd: subPath, stdio: 'inherit' })
+    if (r2.status !== 0) {
+      fail(`build failed in ${sub.dir} (exit ${r2.status})`)
+    }
   }
   ok(`${sub.name} built in ${((Date.now() - t0) / 1000).toFixed(1)}s`)
 
