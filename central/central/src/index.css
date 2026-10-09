@@ -232,6 +232,20 @@ body {
      dark interior; only the glow rim is visible outside it. */
   border-color: transparent;
   background: transparent;
+  /* Clip the chassis to a heater-shield polygon on hover — eliminates
+     any rectangular geometry from the chassis AND the PNG's rectangular
+     canvas. The box-shadow halo is rendered outside the clip, so the
+     shield silhouette sits inside a soft glowing field with no rectangle. */
+  clip-path: polygon(
+    50% 4%,
+    88% 14%,
+    100% 30%,
+    100% 70%,
+    50% 100%,
+    0% 70%,
+    0% 30%,
+    12% 14%
+  );
   /* Pure outer diffuse glow on hover. No drop shadow (would cast a
      rectangle), no inset glow (would tint the chassis interior — that's
      what was reading as a "square outline"). Only flood + tight halo. */
@@ -248,18 +262,23 @@ body {
   min-height: 0;
   padding: 4px 0 16px;
   overflow: hidden;
-  /* The shield PNGs have rectangular canvases with the shield shape
-     inside; mask the corners so only the shield silhouette stays visible
-     and the rectangular PNG edge never reaches the chassis boundary. */
+  /* The shield PNGs have rectangular canvases with dark art around the
+     shield shape. Aggressive radial mask fades the rectangular corners
+     to fully transparent so only the shield silhouette remains.
+     The shield shape itself extends to ~85% from center, so the visible
+     "stop" is below that — the shield stays fully opaque, only the
+     rectangular corners around it fade out. */
   -webkit-mask-image: radial-gradient(
-    ellipse 92% 96% at 50% 50%,
-    black 70%,
-    transparent 100%
+    ellipse 110% 110% at 50% 55%,
+    black 62%,
+    rgba(0, 0, 0, 0.4) 78%,
+    transparent 92%
   );
   mask-image: radial-gradient(
-    ellipse 92% 96% at 50% 50%,
-    black 70%,
-    transparent 100%
+    ellipse 110% 110% at 50% 55%,
+    black 62%,
+    rgba(0, 0, 0, 0.4) 78%,
+    transparent 92%
   );
 }
 
@@ -272,6 +291,16 @@ body {
   transition: filter 0.3s ease;
   pointer-events: none;
   user-select: none;
+  /* Clip the image to a heater-shield polygon — hides the PNG's
+     rectangular dark canvas, leaving only the shield silhouette. */
+  clip-path: polygon(
+    50% 0%,
+    100% 22%,
+    100% 78%,
+    50% 100%,
+    0% 78%,
+    0% 22%
+  );
 }
 
 .shield-card:hover .shield-card-image {
@@ -285,6 +314,14 @@ body {
   padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   font-family: var(--font-mono);
+  transition: opacity 0.3s ease;
+}
+
+/* Hide the footer on hover so the chassis rectangle doesn't read as a
+   card — only the shield + glow halo remain. The footer returns on
+   hover-off so the card identity (name + status) is preserved at rest. */
+.shield-card:hover .shield-card-footer {
+  opacity: 0;
 }
 
 .shield-card-name {
