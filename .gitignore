@@ -61,6 +61,12 @@ central.7z
 # ── Netlify (CLI's site linking metadata; never tracked) ────────────────
 .netlify/
 
+# ── MCP server config (contains auth tokens; never tracked) ───────────
+.mcp.json
+
+# ── Local downloads / screen recordings (not part of the project) ─────
+videos/
+
 # ── Submodule conversion workspace (only used at conversion time;
 #     safe to delete once submodules are in place)
 _external/
@@ -72,3 +78,4 @@ _external/
 !PetroShield-GranPrix_Nacional_2026/**/*.png
 !PetroShield-GranPrix_Nacional_2026/**/*.jpg
 !PetroShield-GranPrix_Nacional_2026/**/*.jpeg
+.atlas/

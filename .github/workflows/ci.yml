@@ -1,0 +1,94 @@
+# CI — runs on every push to main / PR targeting main.
+#
+# Verifies: typecheck (tsc) on each sub-project, Vitest smoke tests,
+# and the unified `bun run build` produces ./dist/ with all 4 sub-paths.
+#
+# Critical: `submodules: recursive` in checkout — the parent is a git
+# monorepo and the 3 sub-app submodules must be cloned for `bun run build`
+# to find them.
+#
+# This workflow does NOT deploy. The Netlify GitHub App (linked in the
+# Netlify dashboard) handles deploys on every push to main. This workflow
+# is the *gate* — if it fails, the PR can't be merged.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Cancel any in-flight CI runs for the same PR / branch when a new commit
+# is pushed. Saves CI minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    name: Lint · Test · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install root deps
+        run: bun install
+
+      - name: Install each sub-project's deps
+        # `bun install` (no --frozen-lockfile) so this works whether the
+        # sub-project tracks package-lock.json, bun.lockb, or both. Each
+        # sub-project's `package.json` is the source of truth.
+        run: |
+          set -e
+          for d in \
+            central/central \
+            central/AXE-Guard_Muilti_Agents-Shell \
+            central/SOC-sys_Dashboard \
+            central/PetroShield_Finance-CyberSec; do
+            echo "::group::bun install in $d"
+            (cd "$d" && bun install)
+            echo "::endgroup::"
+          done
+
+      - name: Lint (typecheck across all sub-projects)
+        run: bun run lint
+
+      - name: Test (Vitest across all sub-projects)
+        run: bun run test
+
+      - name: Build (orchestrated)
+        run: bun run build
+
+      - name: Verify dist/ structure
+        # Sanity-check the build output. The publish dir is `dist/` with
+        # `index.html` at the root (the hub) and three sub-folders, one
+        # per sub-app. If any of these are missing, the deploy would 404.
+        run: |
+          test -f dist/index.html
+          test -f dist/axe-guard/index.html
+          test -f dist/soc-sys/index.html
+          test -f dist/petroshield-finance/index.html
+          echo "✓ all 4 sub-paths present in dist/"
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7

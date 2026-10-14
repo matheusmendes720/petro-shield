@@ -1,0 +1,50 @@
+# Release Please — auto-bumps version + generates CHANGELOG + opens a
+# "Release PR" on every push to main.
+#
+# How it works (powered by googleapis/release-please-action):
+#   1. On push to main, release-please reads the conventional-commit history.
+#   2. If there are release-worthy commits (feat:, fix:, perf:, BREAKING CHANGE),
+#      it opens (or updates) a "Release PR" with:
+#        - CHANGELOG.md updated with the new entries
+#        - package.json version bumped per semver
+#        - release-please-manifest.json updated
+#   3. When the Release PR is merged, release-please tags the merge commit
+#      (e.g., `v0.1.0`) and creates a GitHub Release with auto-generated notes.
+#
+# Deployment is handled by the Netlify GitHub App (linked in the Netlify
+# dashboard), which deploys on every push to main. The tag/release is for
+# versioning + changelog only — Netlify does not need a separate deploy hook.
+#
+# Conventional commits required. See HUB_ARCHITECTURE.md for the workspace
+# conventions. Squash-merge with a conventional-commit title so the commit
+# that lands on main carries the right type.
+
+name: Release Please
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+# One release-please run at a time per branch. New pushes to main while a
+# release PR is open will update the existing release PR rather than opening
+# a duplicate.
+concurrency:
+  group: release-please-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    name: Bump version + update CHANGELOG
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Let the action open the Release PR / tag commits itself.
+          # No `command` needed — defaults to "github-release".

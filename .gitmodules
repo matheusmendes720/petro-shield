@@ -1,12 +1,12 @@
 [submodule "central/AXE-Guard_Muilti_Agents-Shell"]
 	path = central/AXE-Guard_Muilti_Agents-Shell
-	url = ./_external/AXE-Guard_Muilti_Agents-Shell
+	url = https://github.com/matheusmendes720/AXE-Guard_Muilti_Agents-Shell.git
 	branch = main
 [submodule "central/SOC-sys_Dashboard"]
 	path = central/SOC-sys_Dashboard
-	url = ./_external/SOC-sys_Dashboard
+	url = https://github.com/matheusmendes720/SOC-sys_Dashboard.git
 	branch = main
 [submodule "central/PetroShield_Finance-CyberSec"]
 	path = central/PetroShield_Finance-CyberSec
-	url = ./_external/PetroShield_Finance-CyberSec
+	url = https://github.com/matheusmendes720/PetroShield_Finance-CyberSec.git
 	branch = main
