@@ -1,7 +1,7 @@
 {
   "name": "petro-shield-monorepo",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Unified PetroShield / AxeGuard monorepo — hub + 3 sub-apps built and deployed as a single Netlify site.",
   "engines": "node >=20 || bun >=1.1",
