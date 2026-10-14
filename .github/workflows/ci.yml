@@ -65,6 +65,14 @@ jobs:
             echo "::endgroup::"
           done
 
+      - name: Generate Prisma client (Finance only)
+        # `prisma generate` produces `node_modules/.prisma/client/index.d.ts`
+        # which is the source of truth for `import { PrismaClient } from
+        # "@prisma/client"`. `bun install` does NOT run it automatically.
+        # Without this step, `tsc --noEmit` fails on server.ts:5 with
+        # TS2305: Module has no exported member 'PrismaClient'.
+        run: cd central/PetroShield_Finance-CyberSec && npx prisma generate
+
       - name: Lint (typecheck across all sub-projects)
         run: bun run lint
 
