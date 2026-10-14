@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Releases are managed by [release-please](https://github.com/googleapis/release-please) on every push to `main`. Conventional commits are required: `feat:`, `fix:`, `perf:`, `refactor:`, `docs:`, `chore:`, `ci:`, `test:`, `build:` — and `BREAKING CHANGE:` in the footer.
 
+## [0.1.1](https://github.com/matheusmendes720/petro-shield/compare/v0.1.0...v0.1.1) (2026-10-14)
+
+
+### Bug Fixes
+
+* **build:** bypass npm-script shim — direct node invocations are more reliable on Windows ([dfb269e](https://github.com/matheusmendes720/petro-shield/commit/dfb269e5638c80b134f503d9c05a74b362b13b07))
+
 ## [Unreleased]
 
 ### Added
